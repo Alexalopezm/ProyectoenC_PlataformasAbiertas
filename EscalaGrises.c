@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <getopt.h>
 #include <jpeglib.h>
 #include <png.h>
 
@@ -238,35 +239,42 @@ void convertir_a_escala_de_grises(const char *nombre_entrada, const char *nombre
     }
 }
 
+
 int main(int argc, char *argv[]) {
     int option;
     const char *nombre_entrada = NULL;
     const char *nombre_salida = NULL;
+    int de_ayuda = 0;
 
-    while ((option = getopt(argc, argv, "hi:o:12")) != -1) {
+    while ((option = getopt(argc, argv, "hi:o:")) != -1) {
         switch (option) {
             case 'h':
-                printf("Opciones:\n");
-                printf("-h : Ayuda\n");
-                printf("-i : Indicar path de imagen a ingresar\n");
-                printf("-o : Indicar path de imagen de salida\n");
-         
-                return 0;
+                de_ayuda = 1;
+                break;
             case 'i':
-                name_entrada = optarg;
+                nombre_entrada = optarg;
                 break;
             case 'o':
-                name_salida = optarg;
+                nombre_salida = optarg;
                 break;  
 	 }
     }
 
-    if (name_entrada == NULL || name_salida == NULL) {
+    if (de_ayuda) {
+        printf("Uso para PNG: %s -i <imagen_a_ingresar.png> -o <imagen_salida.png>\n", argv[0]);
+        printf("Uso para JPG: %s -i <imagen_a_ingresar.jpg > -o <imagen_salida.jpg>\n", argv[0]);
+        return 0;
+    }
+
+    if (nombre_entrada == NULL || nombre_salida == NULL) {
         printf("Faltan argumentos obligatorios.\n");
         return 1;
     }
 
     convertir_a_escala_de_grises(nombre_entrada, nombre_salida);
+    printf("Imagen convertida a escala de grises y guardada en %s\n", nombre_salida);
 
     return 0;
 }
+    
+
