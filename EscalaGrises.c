@@ -239,16 +239,34 @@ void convertir_a_escala_de_grises(const char *nombre_entrada, const char *nombre
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        printf("Uso: %s [input.png o input.jpg] [nombre_salida]\n", argv[0]);
-        return 1;
+    int option;
+    const char *nombre_entrada = NULL;
+    const char *nombre_salida = NULL;
+
+    while ((option = getopt(argc, argv, "hi:o:12")) != -1) {
+        switch (option) {
+            case 'h':
+                printf("Opciones:\n");
+                printf("-h : Ayuda\n");
+                printf("-i : Indicar path de imagen a ingresar\n");
+                printf("-o : Indicar path de imagen de salida\n");
+         
+                return 0;
+            case 'i':
+                name_entrada = optarg;
+                break;
+            case 'o':
+                name_salida = optarg;
+                break;  
+	 }
     }
 
-    const char *nombre_entrada = argv[1];
-    const char *nombre_salida = argv[2];
+    if (name_entrada == NULL || name_salida == NULL) {
+        printf("Faltan argumentos obligatorios.\n");
+        return 1;
+    }
 
     convertir_a_escala_de_grises(nombre_entrada, nombre_salida);
 
     return 0;
 }
-
